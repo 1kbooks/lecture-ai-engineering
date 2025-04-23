@@ -12,6 +12,7 @@ def display_chat_page(pipe):
     """チャットページのUIを表示する"""
     st.subheader("質問を入力してください")
     user_question = st.text_area("質問", key="question_input", height=100, value=st.session_state.get("current_question", ""))
+    temperature = st.slider("温度", min_value=0.0, max_value=1.0, value=0.7, step=0.1)
     submit_button = st.button("質問を送信")
 
     # セッション状態の初期化（安全のため）
@@ -31,7 +32,7 @@ def display_chat_page(pipe):
         st.session_state.feedback_given = False # フィードバック状態もリセット
 
         with st.spinner("モデルが回答を生成中..."):
-            answer, response_time = generate_response(pipe, user_question)
+            answer, response_time = generate_response(pipe, user_question, temperature)
             st.session_state.current_answer = answer
             st.session_state.response_time = response_time
             # ここでrerunすると回答とフィードバックが一度に表示される
